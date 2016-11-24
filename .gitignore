@@ -1,0 +1,13 @@
+###  Author: Nokey   ###
+
+# 忽略Node模块
+/node_modules/*
+
+# 忽略Mac隐藏文件
+.DS_Store
+
+#忽略Redis备份快照
+*.rdb
+
+#忽略 .vscode
+/.vscode

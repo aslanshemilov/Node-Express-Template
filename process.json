@@ -1,19 +1,18 @@
 {
   "apps": [
     {
-      "name": "Node-Express-Template",
+      "name": "china-startup",
       "script": "app.js",
+      "log_file": "/var/log/pm2log/combined.outerr.log",
+      "error_file": "/var/log/pm2log/err.log",
+      "out_file": "/var/log/pm2log/out.log",
+      "merge_logs": true,
       "interpreter_args": "--harmony",
       "watch": true,
-      "ignore_watch" : ["node_modules", "public", "logs"],
-      "instances": 1,
+      "ignore_watch" : ["node_modules", "public", "\.git"],
+      "instances": 2,
       "exec_mode": "cluster",
-      "env": {
-        "NODE_ENV": "development"
-      },
-      "env_production": {
-        "NODE_ENV": "production"
-      }
+      "log_date_format": "YYYY-MM-DD HH:mm Z"
     }
   ]
 }

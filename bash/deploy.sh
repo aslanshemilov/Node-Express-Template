@@ -1,6 +1,6 @@
 #!/bin/sh
 
-WEB_PATH='/home/ec2-user/cctvnews-app'
+WEB_PATH='/home/ec2-user/cctvnews/ChinaStartup'
 WEB_USER='ec2-user'
 WEB_USERGROUP='ec2-user'
 

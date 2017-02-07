@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+'use strict';
+
+/**
+ * Error log path: /var/log/cron/err.log
+ */
+
+var request        = require('request'),
+    fs             = require('fs'),
+    path           = require('path'),
+    moment         = require('moment'),
+    models         = require(path.resolve(__dirname, '../../models')),
+    LivePvEveryday = models.LivePvEveryday;
+
+// var logger = new log('warning', fs.createWriteStream('/var/log/cron-logger/err.log'));
+
+request({
+  method: 'GET',
+  url: 'http://fex.cgtn.com/analytic/live-watched'
+}, (err, res, body)=>{
+  if(!err && res.statusCode == 200){
+    var data = JSON.parse(body),
+        time = (new Date).getTime();
+    // console.log(data.watched);
+    LivePvEveryday.create({
+      pvtime: time,
+      pv: data.watched
+    }).then((doc)=>{
+      // Insert Successfully
+      console.log('Record Live PV at', moment().format('HH:mm'), 'Successfully!');
+      process.exit();
+    }).catch((err)=>{
+      // logger.error('errMsg:', err);
+      console.log('errMsg:', err);
+      process.exit();
+    });
+  }else{
+    // logger.error('errMsg:', err, 'statusCode:', res.statusCode);
+    console.log('errMsg:', err, 'statusCode:', res.statusCode);
+    process.exit();
+  }
+});

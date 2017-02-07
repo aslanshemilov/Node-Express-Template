@@ -1,27 +1,33 @@
 {
-  "name": "CCTVNEWS-Web",
-  "version": "0.0.1",
+  "name": "chinastartup-app",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "echo \"PM2 start process\"; sudo pm2 start process.json",
-    "init": "npm install -S express mongoose ejs mysql redis request body-parser compression cookie-parser cors debug morgan serve-favicon colors"
+    "start": "node app.js"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
-    "colors": "^1.1.2",
     "compression": "^1.6.2",
+    "connect-mongo": "^1.3.2",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.1",
-    "debug": "^2.3.2",
-    "ejs": "^2.5.2",
+    "ejs": "^2.5.5",
+    "errorhandler": "^1.5.0",
     "express": "^4.14.0",
-    "lodash": "^4.16.6",
-    "mongoose": "^4.6.7",
+    "express-session": "^1.14.2",
+    "jade": "^1.5.0",
+    "log": "^1.4.0",
+    "method-override": "^2.3.7",
+    "moment": "^2.17.1",
+    "mongoose": "^4.7.7",
     "morgan": "^1.7.0",
-    "mysql": "^2.12.0",
-    "redis": "^2.6.3",
-    "request": "^2.78.0",
-    "serve-favicon": "^2.3.0"
+    "multer": "^0.1.3",
+    "pmx": "^0.6.8",
+    "request": "^2.79.0",
+    "serve-favicon": "^2.3.2"
   },
-  "devDependencies": {}
+  "description": "China Startup",
+  "main": "app.js",
+  "author": "nokey",
+  "license": "CCTVNEWS"
 }

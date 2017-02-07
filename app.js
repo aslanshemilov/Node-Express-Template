@@ -1,85 +1,118 @@
 /*
  * @Author: Nokey 
- * @Date: 2016-11-23 15:09:52 
+ * @Date: 2017-02-03 14:37:37 
  * @Last Modified by: Nokey
- * @Last Modified time: 2016-11-23 15:15:13
+ * @Last Modified time: 2017-02-03 16:06:29
  */
-'use strict';
+'use strict'; 
 
-var http         = require('http');
-var express      = require('express');
-var path         = require('path');
-var favicon      = require('serve-favicon');
-var morgan       = require('morgan');  // HTTP Request logger
-var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
-var app          = express();
-var compression  = require('compression');
+// var pmx = require('pmx').init({
+//     http: true
+// });
+
+// Core
+var http    = require('http');
+var express = require('express');
+var app     = express();
+var path    = require('path');
+var config  = require('./config');
 
 // Routes
-var routes = require('./routes');
+var routes  = require('./routes');
+var startup = require('./routes/startup');
+var webhook = require('./routes/webhook');
 
-// view engine setup
+// Middlewares
+var favicon           = require('serve-favicon');
+var morgan            = require('morgan');
+var methodOverride    = require('method-override');
+var cookie            = require('cookie-parser');
+var session           = require('express-session');
+var MongoStore        = require('connect-mongo')(session);
+var chinastartup_conn = require('./models/mongoClient');
+var bodyParser        = require('body-parser');
+var multer            = require('multer');   // multipart/form-data
+var errorHandler      = require('errorhandler');
+var cors              = require('cors');
+
+// gzip
+var compression = require('compression');
+
+// Environments
 app.set('port', process.env.NODE_PORT || 80);
-app.set('env', process.env.NODE_ENV || 'development');
+app.set('env', process.env.NODE_ENV || 'production');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.set('view cache', true);
 
-// uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
-// :method :url :status :response-time ms - :res[content-length]
-app.use(morgan(':date[iso] :method :url :status :response-time ms - :res[content-length]'));
+// Use Middlewares
+app.use(morgan(':remote-addr :referrer :date[iso] :method :url :status :response-time ms - :res[content-length]'));
 app.use(compression());  // Gzip
+app.use(favicon(__dirname + '/public/favicon.ico'));
+// app.use(methodOverride());
+app.use(cookie());   // req.cookies
+app.use(session({ resave: false,
+                  saveUninitialized: true,
+                  secret: 'cgtn2017',
+                  cookie: {
+                    maxAge: 6000
+                  },
+                  store: new MongoStore({
+                    mongooseConnection: chinastartup_conn
+                  })
+                }));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer());   // req.body & req.file or req.files
 app.use(express.static(path.join(__dirname, 'public')));
 
-console.log('Env: ' + app.get('env'));
-// CROS
-// var allowOrigin = new RegExp('^http:\/\/(.+\.)*cctvnews\.cn$');
-var cors = require('./common/cors');
-app.use(cors({
-  origin: '^http:\/\/(.+\.)*cctvnews\.cn$'
-}));
+console.dir('Process Env:' + process.env.NODE_ENV);
+console.log(app.get('env'));
 
-// API
-app.get('/', (req, res, next)=>{
-  res.render('pages/index');
-})
-app.get('/api/*', routes.api);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-// error handlers
-
-// Development error handler
-// Will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
+// CORS
+if('development' !== app.get('env')){
+  var corsOptions = {
+    origin: [/\.cgtn\.com$/, /\.cctvnews\.cn$/, 'http://127.0.0.1:3000', 'http://localhost:8080']
+  };
+}else{
+  var corsOptions = {
+    origin: false
+  };
 }
+console.dir(corsOptions);
 
-// Production error handler
-// No stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+/**
+ * Home Route
+ */
+ 
+app.get('/home', routes);
+
+/**
+ * Chinastartup React Redirect
+ */
+app.get('/chinastartup', function(req, res, next){
+  res.render('pages/startup/index');
 });
+app.get('/chinastartup/*', function(req, res, next){
+  res.render('pages/startup/index');
+});
+
+/**
+ * Startup API Route
+ */
+app.get('/startup/*', cors(corsOptions), startup);
+app.post('/startup/*', cors(corsOptions), startup);
+
+/**
+ * Webhook Route
+ */
+app.get('/webhook/*', webhook);
+app.post('/webhook/*', webhook);
+
+
+// Error handling middleware should be loaded after the loading the routes
+if ('development' == app.get('env')) {
+  app.use(errorHandler());
+}
 
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){

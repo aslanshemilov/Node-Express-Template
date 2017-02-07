@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "cctvnews",
+      "name": "Node-Express-Template",
       "script": "app.js",
       "interpreter_args": "--harmony",
       "watch": true,

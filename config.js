@@ -3,13 +3,14 @@
  */
 
 var config = {
-  ENV: 'production',
-  
   // Database config
-  admin: 'mongodb://nokey:458318331@localhost:27017/admin',
-  db_myapp: 'mongodb://nokey1:nokey1@localhost:27017/myapp',
-  db_startup: 'mongodb://nokey:458318331@localhost:27017/chinastartup',
-  db_cctvnews: 'mongodb://nokey:458318331@localhost:27017/cctvnews',
+  db_myapp: 'mongodb://test:test@localhost:27017/test',
+
+  // Redis config
+  redis_host: '127.0.0.1',
+  redis_port: 6379,
+  redis_db: 0,
+  redis_password: 'nokey458318331',
 
   // Pagination
   news_num_per_page: 9

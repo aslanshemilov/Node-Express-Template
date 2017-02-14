@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "china-startup",
+      "name": "Express",
       "script": "app.js",
       "log_file": "/var/log/pm2log/combined.outerr.log",
       "error_file": "/var/log/pm2log/err.log",

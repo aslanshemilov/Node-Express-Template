@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-02-03 14:37:37 
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-02-03 16:06:29
+ * @Last Modified time: 2017-02-08 18:11:04
  */
 'use strict'; 
 
@@ -16,6 +16,7 @@ var express = require('express');
 var app     = express();
 var path    = require('path');
 var config  = require('./config');
+var log     = require('./common/logger');
 
 // Routes
 var routes  = require('./routes');
@@ -23,17 +24,17 @@ var startup = require('./routes/startup');
 var webhook = require('./routes/webhook');
 
 // Middlewares
-var favicon           = require('serve-favicon');
-var morgan            = require('morgan');
-var methodOverride    = require('method-override');
-var cookie            = require('cookie-parser');
-var session           = require('express-session');
-var MongoStore        = require('connect-mongo')(session);
-var chinastartup_conn = require('./models/mongoClient');
-var bodyParser        = require('body-parser');
-var multer            = require('multer');   // multipart/form-data
-var errorHandler      = require('errorhandler');
-var cors              = require('cors');
+var favicon        = require('serve-favicon');
+var morgan         = require('morgan');
+var methodOverride = require('method-override');
+var cookie         = require('cookie-parser');
+var session        = require('express-session');
+var MongoStore     = require('connect-mongo')(session);
+var test_conn      = require('./models/mongoClient');
+var bodyParser     = require('body-parser');
+// var multer         = require('multer');   // multipart/form-data 上传文件使用
+var errorHandler   = require('errorhandler');
+var cors           = require('cors');
 
 // gzip
 var compression = require('compression');
@@ -57,16 +58,16 @@ app.use(session({ resave: false,
                     maxAge: 6000
                   },
                   store: new MongoStore({
-                    mongooseConnection: chinastartup_conn
+                    mongooseConnection: test_conn
                   })
                 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer());   // req.body & req.file or req.files
+// app.use(multer());   // req.body & req.file or req.files
 app.use(express.static(path.join(__dirname, 'public')));
 
-console.dir('Process Env:' + process.env.NODE_ENV);
-console.log(app.get('env'));
+log.trace('Process Env:' + process.env.NODE_ENV);
+log.trace(app.get('env'));
 
 // CORS
 if('development' !== app.get('env')){
@@ -78,21 +79,21 @@ if('development' !== app.get('env')){
     origin: false
   };
 }
-console.dir(corsOptions);
+log.trace(corsOptions);
 
 /**
  * Home Route
  */
  
-app.get('/home', routes);
+app.get('/', routes);
 
 /**
- * Chinastartup React Redirect
+ * test React Redirect
  */
-app.get('/chinastartup', function(req, res, next){
+app.get('/test', function(req, res, next){
   res.render('pages/startup/index');
 });
-app.get('/chinastartup/*', function(req, res, next){
+app.get('/test/*', function(req, res, next){
   res.render('pages/startup/index');
 });
 
@@ -119,4 +120,5 @@ server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+module.exports = server.listen(app.get('port'));
 // END

@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-02-03 14:37:37 
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-02-08 18:11:04
+ * @Last Modified time: 2017-02-23 18:21:13
  */
 'use strict'; 
 
@@ -53,7 +53,7 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(cookie());   // req.cookies
 app.use(session({ resave: false,
                   saveUninitialized: true,
-                  secret: 'cgtn2017',
+                  secret: '123456',
                   cookie: {
                     maxAge: 6000
                   },
@@ -72,7 +72,7 @@ log.trace(app.get('env'));
 // CORS
 if('development' !== app.get('env')){
   var corsOptions = {
-    origin: [/\.cgtn\.com$/, /\.cctvnews\.cn$/, 'http://127.0.0.1:3000', 'http://localhost:8080']
+    origin: [/\.example\.com$/, 'http://127.0.0.1:3000', 'http://localhost:8080']
   };
 }else{
   var corsOptions = {

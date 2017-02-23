@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-01-18 15:10:31 
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-01-18 15:24:02
+ * @Last Modified time: 2017-02-23 18:07:11
  */
 'use strict'; 
 
@@ -14,7 +14,7 @@ var execFile = require('child_process').execFile;
 /**
  * Github Webhook
  */
-var SECRET_TOKEN = '2nr4zl1z3smupnkejxpupiudi';
+var SECRET_TOKEN = '123456';
 router.post('/webhook/github-push', (req, res, next)=>{
   // console.log(JSON.stringify(req.headers));
   const hub_signature_arr = req.headers['x-hub-signature'].split('=');

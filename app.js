@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-02-03 14:37:37 
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-02-23 18:21:13
+ * @Last Modified time: 2017-02-27 23:43:55
  */
 'use strict'; 
 
@@ -76,7 +76,7 @@ if('development' !== app.get('env')){
   };
 }else{
   var corsOptions = {
-    origin: false
+    origin: '*'
   };
 }
 log.trace(corsOptions);

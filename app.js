@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-02-03 14:37:37 
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-04-07 15:22:43
+ * @Last Modified time: 2017-04-07 16:47:54
  */
 'use strict'; 
 
@@ -116,9 +116,8 @@ if ('development' == app.get('env')) {
 }
 
 var server = http.createServer(app);
-server.listen(app.get('port'), function(){
+
+module.exports = server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-
-module.exports = server.listen(app.get('port'));
 // END

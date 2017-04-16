@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-02-03 14:37:37 
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-02-27 23:43:55
+ * @Last Modified time: 2017-04-07 16:47:54
  */
 'use strict'; 
 
@@ -20,7 +20,7 @@ var log     = require('./common/logger');
 
 // Routes
 var routes  = require('./routes');
-var startup = require('./routes/startup');
+// var startup = require('./routes/startup');
 var webhook = require('./routes/webhook');
 
 // Middlewares
@@ -30,7 +30,7 @@ var methodOverride = require('method-override');
 var cookie         = require('cookie-parser');
 var session        = require('express-session');
 var MongoStore     = require('connect-mongo')(session);
-var test_conn      = require('./models/mongoClient');
+// var test_conn      = require('./models/mongoClient');
 var bodyParser     = require('body-parser');
 // var multer         = require('multer');   // multipart/form-data 上传文件使用
 var errorHandler   = require('errorhandler');
@@ -51,16 +51,16 @@ app.use(compression());  // Gzip
 app.use(favicon(__dirname + '/public/favicon.ico'));
 // app.use(methodOverride());
 app.use(cookie());   // req.cookies
-app.use(session({ resave: false,
-                  saveUninitialized: true,
-                  secret: '123456',
-                  cookie: {
-                    maxAge: 6000
-                  },
-                  store: new MongoStore({
-                    mongooseConnection: test_conn
-                  })
-                }));
+// app.use(session({ resave: false,
+//                   saveUninitialized: true,
+//                   secret: '123456',
+//                   cookie: {
+//                     maxAge: 6000
+//                   },
+//                   store: new MongoStore({
+//                     mongooseConnection: test_conn
+//                   })
+//                 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(multer());   // req.body & req.file or req.files
@@ -100,8 +100,8 @@ app.get('/test/*', function(req, res, next){
 /**
  * Startup API Route
  */
-app.get('/startup/*', cors(corsOptions), startup);
-app.post('/startup/*', cors(corsOptions), startup);
+// app.get('/startup/*', cors(corsOptions), startup);
+// app.post('/startup/*', cors(corsOptions), startup);
 
 /**
  * Webhook Route
@@ -116,9 +116,8 @@ if ('development' == app.get('env')) {
 }
 
 var server = http.createServer(app);
-server.listen(app.get('port'), function(){
+
+module.exports = server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
-
-module.exports = server.listen(app.get('port'));
 // END

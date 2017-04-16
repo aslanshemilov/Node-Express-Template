@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-01-18 15:13:15 
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-02-07 20:39:46
+ * @Last Modified time: 2017-04-07 14:52:21
  */
 'use strict';
 
@@ -17,20 +17,22 @@ var express          = require('express'),
 
 /**
  * Example Redis
+  var key = 'cgtn',
+  docs = {a:1, b:2},
+  expires_time = 2000;
+  
+  redis.set(key, JSON.stringify(docs), expires_time, (err, reply)=>{
+    if(err){
+      logger.error('Cache error: '+err);
+    }else{
+      logger.info('Cache success!');
+    }
+  });
  */
-var key = 'cgtn',
-    docs = {a:1, b:2},
-    expires_time = 2000;
-redis.set(key, JSON.stringify(docs), expires_time, (err, reply)=>{
-  if(err){
-    logger.error('Cache error: '+err);
-  }else{
-    logger.info('Cache success!');
-  }
-});
+
 
 /*
- * Get home news data
+ * Ajax Example
  */
 router.get('/startup/get-home-news-data', (req, res, next)=>{
   // get how much news, the default is 11
@@ -53,7 +55,7 @@ router.get('/startup/get-home-news-data', (req, res, next)=>{
 });
 
 /*
- * Pagination
+ * Pagination Example
  */
 router.get('/startup/get-pagination-article-list', (req, res, next)=>{
   let 

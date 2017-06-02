@@ -12,7 +12,15 @@
       "ignore_watch" : ["node_modules", "public", "\.git", "log"],
       "instances": 2,
       "exec_mode": "cluster",
-      "log_date_format": "YYYY-MM-DD HH:mm Z"
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "env_development": {
+        "NODE_ENV": "development",
+        "NODE_PORT": 3000
+      },
+      "env_production" : {
+        "NODE_ENV": "production",
+        "NODE_PORT": 80
+      }
     }
   ]
 }

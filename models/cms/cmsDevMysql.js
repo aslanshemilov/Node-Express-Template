@@ -1,14 +1,14 @@
 /*
 * @Author: Nokey
 * @Date:   2016-10-14 12:40:03
-* @Last Modified by:   Nokey
-* @Last Modified time: 2016-10-18 23:38:15
+ * @Last Modified by: Nokey
+ * @Last Modified time: 2017-06-02 15:15:58
 */
 
 'use strict';
 
 var mysql = require('mysql');
-var config = require('../config.js');
+var config = require('../config');
 
 var cmsDevPool = mysql.createPool({
   connectionLimit : config.cms_dev_mysql_limit,

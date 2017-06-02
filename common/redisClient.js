@@ -1,14 +1,14 @@
 /*
 * @Author: Nokey
 * @Date:   2016-09-23 15:39:11
-* @Last Modified by:   Nokey
-* @Last Modified time: 2016-10-27 23:07:34
+ * @Last Modified by: Nokey
+ * @Last Modified time: 2017-06-02 15:16:00
 */
 
 'use strict';
 
 var redis = require('redis');
-var config = require('../config.js');
+var config = require('../config');
 var logger = require('./logger.js');
 var redisClient = redis.createClient({
   host: config.redis_host,

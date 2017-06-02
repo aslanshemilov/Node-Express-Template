@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-02-03 14:37:37 
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-04-07 16:47:54
+ * @Last Modified time: 2017-06-02 15:46:25
  */
 'use strict'; 
 
@@ -24,17 +24,17 @@ var routes  = require('./routes');
 var webhook = require('./routes/webhook');
 
 // Middlewares
-var favicon        = require('serve-favicon');
-var morgan         = require('morgan');
-var methodOverride = require('method-override');
-var cookie         = require('cookie-parser');
-var session        = require('express-session');
-var MongoStore     = require('connect-mongo')(session);
-// var test_conn      = require('./models/mongoClient');
-var bodyParser     = require('body-parser');
-// var multer         = require('multer');   // multipart/form-data 上传文件使用
-var errorHandler   = require('errorhandler');
-var cors           = require('cors');
+var favicon      = require('serve-favicon');
+var morgan       = require('morgan');
+var cookie       = require('cookie-parser');
+var session      = require('express-session');
+var MongoStore   = require('connect-mongo')(session);
+// var test_conn = require('./common/mongoClient');
+var bodyParser   = require('body-parser');
+var multer       = require('multer');   // multipart/form-data 上传文件使用
+var upload       = multer({ dest: 'uploads/' }); // req.body & req.file or req.files
+var errorHandler = require('errorhandler');
+var cors         = require('cors');
 
 // gzip
 var compression = require('compression');
@@ -49,7 +49,6 @@ app.set('view engine', 'ejs');
 app.use(morgan(':remote-addr :referrer :date[iso] :method :url :status :response-time ms - :res[content-length]'));
 app.use(compression());  // Gzip
 app.use(favicon(__dirname + '/public/favicon.ico'));
-// app.use(methodOverride());
 app.use(cookie());   // req.cookies
 // app.use(session({ resave: false,
 //                   saveUninitialized: true,
@@ -63,7 +62,6 @@ app.use(cookie());   // req.cookies
 //                 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(multer());   // req.body & req.file or req.files
 app.use(express.static(path.join(__dirname, 'public')));
 
 log.trace('Process Env:' + process.env.NODE_ENV);
@@ -84,7 +82,6 @@ log.trace(corsOptions);
 /**
  * Home Route
  */
- 
 app.get('/', routes);
 
 /**

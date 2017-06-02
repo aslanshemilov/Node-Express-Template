@@ -2,7 +2,7 @@
  * @Author: Nokey
  * @Date:   2016-09-23 16:34:44
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-02-08 17:45:00
+ * @Last Modified time: 2017-06-02 16:59:38
 */
 
 'use strict';
@@ -16,9 +16,9 @@
  * logger.fatal('Cheese was breeding ground for listeria.');
  */
 
+// TODO: need migrate into v2.x, seprate diff log into log folder
 var log4js = require('log4js');
 var env = process.env.NODE_ENV;
-var category = 'console';
 
 log4js.configure({
   appenders: [
@@ -37,7 +37,7 @@ log4js.configure({
   replaceConsole: true
 });
 
-var logger = log4js.getLogger(category),
+var logger = log4js.getLogger('console'),
     log_level = (env !== 'production') ? 'DEBUG' : 'ERROR';
 
 logger.setLevel(log_level);

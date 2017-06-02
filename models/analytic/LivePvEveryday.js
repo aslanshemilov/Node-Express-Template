@@ -2,11 +2,11 @@
  * @Author: Nokey 
  * @Date: 2017-01-25 19:59:57 
  * @Last Modified by: Nokey
- * @Last Modified time: 2017-02-07 20:44:27
+ * @Last Modified time: 2017-06-02 14:59:03
  */
 'use strict'; 
 
-var test_conn = require('../mongoClient.js');
+var test_conn = require('../../common/mongoClient.js');
 var mongoose          = require('mongoose');
 var Schema            = mongoose.Schema;
 

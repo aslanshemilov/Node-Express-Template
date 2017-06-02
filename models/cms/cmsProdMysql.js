@@ -1,15 +1,15 @@
 /*
 * @Author: Nokey
 * @Date:   2016-11-04 14:20:40
-* @Last Modified by:   Nokey
-* @Last Modified time: 2016-11-04 16:03:28
+* @Last Modified by: Nokey
+* @Last Modified time: 2017-06-02 15:16:14
 */
 
 'use strict';
 
 var mysql  = require('mysql');
 var colors = require('colors');
-var config = require('../config.js');
+var config = require('../config');
 
 var cmsProdPool = mysql.createPool({
   connectionLimit : config.cms_mysql_limit,

@@ -9,7 +9,7 @@
       "merge_logs": true,
       "interpreter_args": "--harmony",
       "watch": true,
-      "ignore_watch" : ["node_modules", "public", "\.git"],
+      "ignore_watch" : ["node_modules", "public", "\.git", "log"],
       "instances": 2,
       "exec_mode": "cluster",
       "log_date_format": "YYYY-MM-DD HH:mm Z"

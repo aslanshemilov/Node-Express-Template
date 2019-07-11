@@ -1,120 +1,146 @@
 /*
  * @Author: Nokey 
- * @Date: 2017-02-03 14:37:37 
- * @Last Modified by: Nokey
- * @Last Modified time: 2017-06-02 15:46:25
+ * @Date: 2017-12-31 19:43:53 
+ * @Last Modified by: Mr.B
+ * @Last Modified time: 2019-07-10 10:40:05
  */
 'use strict'; 
 
-// var pmx = require('pmx').init({
-//     http: true
-// });
-
 // Core
-var http    = require('http');
-var express = require('express');
-var app     = express();
-var path    = require('path');
-var config  = require('./config');
-var log     = require('./common/logger');
-
-// Routes
-var routes  = require('./routes');
-// var startup = require('./routes/startup');
-var webhook = require('./routes/webhook');
+const http    = require('http')
+const https   = require('https')
+const express = require('express')
+const app     = express()
+const path    = require('path')
+const fs      = require('fs')
+const config  = require('./config')
+const log4js = require('log4js')
 
 // Middlewares
-var favicon      = require('serve-favicon');
-var morgan       = require('morgan');
-var cookie       = require('cookie-parser');
-var session      = require('express-session');
-var MongoStore   = require('connect-mongo')(session);
-// var test_conn = require('./common/mongoClient');
-var bodyParser   = require('body-parser');
-var multer       = require('multer');   // multipart/form-data 上传文件使用
-var upload       = multer({ dest: 'uploads/' }); // req.body & req.file or req.files
-var errorHandler = require('errorhandler');
-var cors         = require('cors');
-
-// gzip
-var compression = require('compression');
+const favicon       = require('serve-favicon')
+// const morgan        = require('morgan') // HTTP Request logger
+const log = require('./common/logger').getLogger('infoLog')
+const session       = require('express-session')
+const RedisStore    = require('connect-redis')(session)
+const redis_client  = require('./common/redisClient')
+const mongo_client  = require('./common/mongoClient')
+const bodyParser    = require('body-parser')
+const compression   = require('compression')
+const cors          = require('cors')
+const passport      = require('passport')
+const LocalStrategy = require('passport-local').Strategy
 
 // Environments
-app.set('port', process.env.NODE_PORT || 80);
-app.set('env', process.env.NODE_ENV || 'production');
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.set('port', config.NODE_PORT || 80)
+app.set('env', config.NODE_ENV || 'production')
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'ejs')
 
 // Use Middlewares
-app.use(morgan(':remote-addr :referrer :date[iso] :method :url :status :response-time ms - :res[content-length]'));
-app.use(compression());  // Gzip
-app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(cookie());   // req.cookies
-// app.use(session({ resave: false,
-//                   saveUninitialized: true,
-//                   secret: '123456',
-//                   cookie: {
-//                     maxAge: 6000
-//                   },
-//                   store: new MongoStore({
-//                     mongooseConnection: test_conn
-//                   })
-//                 }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(express.static(path.join(__dirname, 'public')))
+// app.use(morgan(':remote-addr :referrer :date[iso] :method :url :status :response-time ms - :res[content-length]'))
+app.use(log4js.connectLogger(logger, {
+    level: 'info',
+    format: (req, res, format) => format(`:status :remote-addr :referrer :method :url :response-time ms ${JSON.stringify(req.body)}`)
+}))
+app.use(compression())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
-log.trace('Process Env:' + process.env.NODE_ENV);
-log.trace(app.get('env'));
-
-// CORS
-if('development' !== app.get('env')){
-  var corsOptions = {
-    origin: [/\.example\.com$/, 'http://127.0.0.1:3000', 'http://localhost:8080']
-  };
-}else{
-  var corsOptions = {
-    origin: '*'
-  };
-}
-log.trace(corsOptions);
-
-/**
- * Home Route
- */
-app.get('/', routes);
-
-/**
- * test React Redirect
- */
-app.get('/test', function(req, res, next){
-  res.render('pages/startup/index');
-});
-app.get('/test/*', function(req, res, next){
-  res.render('pages/startup/index');
-});
-
-/**
- * Startup API Route
- */
-// app.get('/startup/*', cors(corsOptions), startup);
-// app.post('/startup/*', cors(corsOptions), startup);
-
-/**
- * Webhook Route
- */
-app.get('/webhook/*', webhook);
-app.post('/webhook/*', webhook);
+app.use(session({
+    secret: 'Garfield cat',
+    name: 'G.SID',
+    resave: false,
+    saveUninitialized: true,
+    rolling: true,  // refresh session on every response
+    cookie: {
+        path: '/',
+        // httpOnly: true,
+        maxAge: 3600000,
+        secure: false
+    },
+    store: new RedisStore({
+        client: redis_client
+    })
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 
-// Error handling middleware should be loaded after the loading the routes
-if ('development' == app.get('env')) {
-  app.use(errorHandler());
+// Passport Config
+const Users = require('./models/sy/users');
+passport.use(new LocalStrategy(Users.authenticate()));
+passport.serializeUser(Users.serializeUser());
+passport.deserializeUser(Users.deserializeUser());
+
+
+
+// CORS config
+let corsOptions = null
+if ('development' !== app.get('env')) {
+    corsOptions = {
+        origin: [/\.domain1\.com$/, /\.domain2\.me$/]
+    }
+} else {
+    corsOptions = {
+        origin: [/127\.0\.0\.1:8080/, /localhost:8080/]
+    }
 }
 
-var server = http.createServer(app);
+/**
+ * Routes
+ */
+let page = require('./routes/page'),
+    api = require('./routes/api')
 
-module.exports = server.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
-// END
+app.all('/api/*', cors(corsOptions), api)
+app.all('/*', page)
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+    var err = new Error('Not Found')
+    err.status = 404
+    next(err)
+})
+
+// Development error handler Will print stacktrace
+if (app.get('env') === 'development') {
+    app.use((err, req, res, next) => {
+        res.status(err.status || 500)
+        res.render('error', {
+            message: err.message,
+            error: err
+        })
+    })
+}
+
+// Production error handler No stacktraces leaked to user
+app.use((err, req, res, next) => {
+    res.status(err.status || 500)
+    res.render('error', {
+        message: err.message,
+        error: {}
+    })
+})
+
+// HTTP Server
+const server_http = http.createServer(app)
+server_http.listen(app.get('port'), () => {
+    console.dir('Process Env:' + process.env.NODE_ENV)
+    console.dir('App Env: ' + app.get('env'))
+    console.dir(corsOptions)
+    console.dir('Express HTTP server listening on port ' + app.get('port'))
+})
+
+// HTTPS Server
+// const options = {
+//     key: fs.readFileSync('./server.key'),
+//     cert: fs.readFileSync('./server.crt')
+// };
+// const server_https = https.createServer(options, app);
+// server_https.listen(443, () => {
+//     console.dir('Express HTTPS server listening on port 443');
+// });
+
+module.exports = app

@@ -7,19 +7,18 @@
 
 'use strict';
 
-let config    = require('../config')
-let log       = require('./logger').getLogger('infoLog')
-let mongoose  = require('mongoose')
-let Schema    = mongoose.Schema
-let test_conn = mongoose.createConnection(config.db_myapp)
+const config   = require('../config')
+const log      = require('./logger').getLogger('infoLog')
+const mongoose = require('mongoose')
+const conn     = mongoose.createConnection(config.db_myapp)
 
 // test conn events
-test_conn.on('error', (err)=>{
+conn.on('error', (err)=>{
     log.error('Connection error: ' + err)
 })
 
-test_conn.once('connected', ()=>{
+conn.once('connected', ()=>{
     log.info('MongoDB test connection successfully!')
 })
 
-exports = module.exports = test_conn
+exports = module.exports = conn

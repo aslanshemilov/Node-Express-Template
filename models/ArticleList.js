@@ -6,11 +6,11 @@
 */
 'use strict';
 
-var test_conn = require('../common/mongoClient.js');
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const conn     = require('../common/mongoClient.js')
+const mongoose = require('mongoose')
+const Schema   = mongoose.Schema
 
-var ArticleListSchema = new Schema({
+const ArticleListSchema = new Schema({
     'id'               : { type: Number },
     'videourl'         : { type: String },
     'audiourl'         : { type: String },
@@ -24,10 +24,11 @@ var ArticleListSchema = new Schema({
     'likenum'          : { type: Number },
     'newstime'         : { type: Date },
     'type'             : { type: Number }
-});
+})
 
-ArticleListSchema.index({newstime: -1});
+ArticleListSchema.index({newstime: -1})
 
-test_conn.model('ArticleList', ArticleListSchema);
+// link the collection "articlelists" with schema
+conn.model('ArticleList', ArticleListSchema)
 
-exports = module.exports = test_conn.model('ArticleList');
+exports = module.exports = conn.model('ArticleList')

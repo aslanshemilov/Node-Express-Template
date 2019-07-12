@@ -10,8 +10,12 @@
 /**
  * Redis cache
  */
-var redis = require('./redisClient')
-var log = require('./logger').getLogger('infoLog')
+const util  = require('util')
+const redis = require('./redisClient')
+
+const rSetex = util.promisify(redis.setex).bind(redis)
+const rSet = util.promisify(redis.set).bind(redis)
+const rGet = util.promisify(redis.get).bind(redis)
 
 /**
  * cache key-value in secends
@@ -19,39 +23,29 @@ var log = require('./logger').getLogger('infoLog')
  * @param {String} key
  * @param {String} value
  * @param {Number} expire
- * @param {Function} cb
+ * 
+ * @returns Promise
  */
-function set(key, value, expire, cb) {
-    if (typeof expire === 'function') {
-        cb = expire
-        expire = null
-    }
+function set(key, value, expire) {
     if(typeof value === 'object'){
         value = JSON.stringify(value)
     }
 
     if (!!expire) {
-        redis.setex(key, expire, value, cb)
+        return rSetex(key, expire, value)
     } else {
-        redis.set(key, value, cb)
+        return rSet(key, value)
     }
-    log.debug('Set Cache:', key, value)
 }
 exports.set = set
 
-// Get string value
-function get(key, cb) {
-    redis.get(key, (err, data) => {
-        if (err) {
-            return cb(err)
-        }
-        if (!data) {
-            return cb()
-        }
-
-        log.debug('Get Cache: ', key, data)
-
-        cb(null, data)
-    })
+/**
+ * get value from cache
+ *
+ * @param {String} key
+ * @returns Promise
+ */
+function get(key) {
+    return rGet(key)
 }
 exports.get = get

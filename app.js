@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-12-31 19:43:53 
  * @Last Modified by: Mr.B
- * @Last Modified time: 2019-07-10 10:40:05
+ * @Last Modified time: 2019-07-12 16:08:17
  */
 'use strict'; 
 
@@ -13,17 +13,15 @@ const express = require('express')
 const app     = express()
 const path    = require('path')
 const fs      = require('fs')
-const config  = require('./config')
-const log4js = require('log4js')
+const log4js  = require('log4js')
 
 // Middlewares
 const favicon       = require('serve-favicon')
-// const morgan        = require('morgan') // HTTP Request logger
-const log = require('./common/logger').getLogger('infoLog')
+// const morgan     = require('morgan') // HTTP Request logger
+const log           = require('./common/logger').getLogger('infoLog')
 const session       = require('express-session')
 const RedisStore    = require('connect-redis')(session)
 const redis_client  = require('./common/redisClient')
-const mongo_client  = require('./common/mongoClient')
 const bodyParser    = require('body-parser')
 const compression   = require('compression')
 const cors          = require('cors')
@@ -31,8 +29,8 @@ const passport      = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 
 // Environments
-app.set('port', config.NODE_PORT || 80)
-app.set('env', config.NODE_ENV || 'production')
+app.set('port', process.env.NODE_PORT || 80)
+app.set('env', process.env.NODE_ENV || 'production')
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
@@ -47,7 +45,6 @@ app.use(log4js.connectLogger(logger, {
 app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-
 app.use(session({
     secret: 'Garfield cat',
     name: 'G.SID',
@@ -67,14 +64,11 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-
 // Passport Config
-const Users = require('./models/sy/users');
-passport.use(new LocalStrategy(Users.authenticate()));
-passport.serializeUser(Users.serializeUser());
-passport.deserializeUser(Users.deserializeUser());
-
-
+const Users = require('./models/User')
+passport.use(new LocalStrategy(Users.authenticate()))
+passport.serializeUser(Users.serializeUser())
+passport.deserializeUser(Users.deserializeUser())
 
 // CORS config
 let corsOptions = null
@@ -97,40 +91,37 @@ let page = require('./routes/page'),
 app.all('/api/*', cors(corsOptions), api)
 app.all('/*', page)
 
-// catch 404 and forward to error handler
+/**
+ * catch 404 and forward to error handler
+ */
 app.use((req, res, next) => {
     var err = new Error('Not Found')
     err.status = 404
     next(err)
 })
 
-// Development error handler Will print stacktrace
-if (app.get('env') === 'development') {
-    app.use((err, req, res, next) => {
-        res.status(err.status || 500)
-        res.render('error', {
-            message: err.message,
-            error: err
-        })
-    })
-}
-
-// Production error handler No stacktraces leaked to user
+/**
+ * Error Handle
+ */
 app.use((err, req, res, next) => {
+    log.error('HTTP', err.message)
+
     res.status(err.status || 500)
     res.render('error', {
         message: err.message,
-        error: {}
+
+        // Development error handler Will print stacktrace
+        // Production error handler No stacktraces leaked to user
+        error: app.get('env') === 'development' ? err : {}
     })
 })
 
 // HTTP Server
 const server_http = http.createServer(app)
 server_http.listen(app.get('port'), () => {
-    console.dir('Process Env:' + process.env.NODE_ENV)
-    console.dir('App Env: ' + app.get('env'))
-    console.dir(corsOptions)
-    console.dir('Express HTTP server listening on port ' + app.get('port'))
+    log.info('App Env: ' + app.get('env'))
+    log.info(corsOptions)
+    log.info('Express HTTP server listening on port ' + app.get('port'))
 })
 
 // HTTPS Server
@@ -140,7 +131,7 @@ server_http.listen(app.get('port'), () => {
 // };
 // const server_https = https.createServer(options, app);
 // server_https.listen(443, () => {
-//     console.dir('Express HTTPS server listening on port 443');
+//     log.info('Express HTTPS server listening on port 443');
 // });
 
 module.exports = app

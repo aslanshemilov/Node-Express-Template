@@ -7,13 +7,13 @@
 
 'use strict';
 
-var redis       = require('redis')
-var config      = require('../config')
-var log         = require('./logger.js').getLogger('infoLog')
-var redisClient = redis.createClient({
-        host    : config.redis_host,
-        port    : config.redis_port,
-        db      : config.redis_db
+const redis       = require('redis')
+const config      = require('../config')
+const log         = require('./logger.js').getLogger('infoLog')
+const redisClient = redis.createClient({
+        host: config.redis_host,
+        port: config.redis_port
+        // db  : config.redis_db
         // password: config.redis_password
     })
 

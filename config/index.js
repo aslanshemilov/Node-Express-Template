@@ -16,9 +16,6 @@ utils.exitDirify(logInfoPath)
 
 let config = {
     debug: true,
-    
-    NODE_PORT: 8080,
-    NODE_ENV: 'development', // development or production
 
     // MongoDB
     // db_myapp: 'mongodb://test:test@localhost:27017/test',
@@ -27,7 +24,7 @@ let config = {
     // Redis
     redis_host: '127.0.0.1',
     redis_port: 6379,
-    redis_db: 0,
+    // redis_db: 0,
     // redis_password: '123qwe',
 
     // log4js

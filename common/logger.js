@@ -16,10 +16,10 @@
  * logger.fatal('Cheese was breeding ground for listeria.');
  */
 
-let log4js = require('log4js')
-let config = require('../config')
+const log4js = require('log4js')
+const config = require('../config')
 
-let log_level = config.debug ? 'debug' : 'info'
+const log_level = config.debug ? 'debug' : 'info'
 
 log4js.configure({
     appenders: {

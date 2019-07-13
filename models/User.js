@@ -6,7 +6,7 @@
  */
 'use strict'; 
 
-const conn  = require('../../common/mongoClient')
+const conn     = require('../../common/mongoClient')
 const mongoose = require('mongoose')
 const Schema   = mongoose.Schema
 const plm      = require('passport-local-mongoose')

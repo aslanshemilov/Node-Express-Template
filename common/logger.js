@@ -2,7 +2,7 @@
  * @Author: Nokey
  * @Date:   2016-09-23 16:34:44
  * @Last Modified by: Mr.B
- * @Last Modified time: 2019-07-10 18:39:37
+ * @Last Modified time: 2019-07-13 22:25:58
  */
 
 'use strict';
@@ -18,8 +18,6 @@
 
 const log4js = require('log4js')
 const config = require('../config')
-
-const log_level = config.debug ? 'debug' : 'info'
 
 log4js.configure({
     appenders: {
@@ -39,11 +37,13 @@ log4js.configure({
         }
     },
     categories: {
-        errLog: { appenders: ['errLog'], level: 'error' },
-        infoLog: { appenders: ['infoLog'], level: log_level },
+        errLog: { appenders: ['errLog'], level: config.debug ? 'debug' : 'error' },
+        infoLog: { appenders: ['infoLog'], level: config.debug ? 'debug' : 'info' },
         default: { appenders: ['infoLog', 'errLog'], level: 'trace' }
     },
     pm2: true
 })
+
+// console.log(log4js)
 
 module.exports = log4js

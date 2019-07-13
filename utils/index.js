@@ -2,11 +2,11 @@
  * @Author: Nokey 
  * @Date: 2019-07-10 17:42:38 
  * @Last Modified by: Mr.B
- * @Last Modified time: 2019-07-10 18:20:53
+ * @Last Modified time: 2019-07-13 22:30:44
  */
 'use strict'; 
 
-let fs = require('fs')
+const fs  = require('fs')
 
 /**
  * detect whether path exit or not
@@ -16,7 +16,7 @@ exports.exitDirify = (pathStr)=>{
         fs.mkdirSync(pathStr, {
             recursive: true
         })
-        console.log('Create Log Path: ' + pathStr)
+        console.info('Create Log Path: ' + pathStr)
     }
     
     return pathStr

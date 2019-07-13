@@ -6,9 +6,9 @@
     "start": "node app.js",
     "test": "mocha -G --reporter mochawesome --reporter-options reportDir=./test/reports",
     "redis": "redis-server --daemonize yes",
-    "pm2_dev": "sudo pm2 start process.json --env development",
-    "pm2_prod": "sudo pm2 start process.json --env production",
-    "pm2_stop": "sudo pm2 stop process.json"
+    "pm2_dev": "pm2 start process.json --env development",
+    "pm2_prod": "pm2 start process.json --env production",
+    "pm2_stop": "pm2 stop process.json"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

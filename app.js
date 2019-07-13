@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-12-31 19:43:53 
  * @Last Modified by: Mr.B
- * @Last Modified time: 2019-07-12 16:08:17
+ * @Last Modified time: 2019-07-13 22:27:45
  */
 'use strict'; 
 
@@ -61,14 +61,16 @@ app.use(session({
         client: redis_client
     })
 }))
+
+/*****  Passport Config  *****/
 app.use(passport.initialize())
 app.use(passport.session())
 
-// Passport Config
 const Users = require('./models/User')
 passport.use(new LocalStrategy(Users.authenticate()))
 passport.serializeUser(Users.serializeUser())
 passport.deserializeUser(Users.deserializeUser())
+/*****  END: Config  *****/
 
 // CORS config
 let corsOptions = null
@@ -88,8 +90,8 @@ if ('development' !== app.get('env')) {
 let page = require('./routes/page'),
     api = require('./routes/api')
 
-app.all('/api/*', cors(corsOptions), api)
-app.all('/*', page)
+app.post('/api/*', cors(corsOptions), api)
+app.get('/*', page)
 
 /**
  * catch 404 and forward to error handler

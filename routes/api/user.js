@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2019-07-13 19:55:19 
  * @Last Modified by: Mr.B
- * @Last Modified time: 2019-07-13 21:37:37
+ * @Last Modified time: 2019-07-15 15:58:29
  */
 'use strict'; 
 
@@ -14,19 +14,20 @@ exports.register = (req, res, next)=>{
     let name = req.body.username,
         pwd = req.body.password
 
+    // TODO: verify parameters
     User.register(new User({username: name}), pwd, (err, user)=>{
         if (err) {
-            log.error(`Register fail: ${err.code} ${err.message}`)
+            log.error(`Register fail: ${err.name} ${err.message}`)
 
             return res.json({
                 stat: 500,
-                msg: `Register fail!`
+                msg: `Register fail: ${err.message}`
             })
         }
 
         req.login(user, (err)=>{
             if(err){
-                log.error(`Register fail: ${err.code} ${err.message}`)
+                log.error(`Register fail: ${err.name} ${err.message}`)
 
                 return res.json({
                     stat: 401,
@@ -43,6 +44,7 @@ exports.register = (req, res, next)=>{
 }
 
 exports.login = (req, res, next)=>{
+
     passport.authenticate('local', (err, user, info)=>{
         if (err) { return next(err); }
         if (!user) { 
@@ -57,7 +59,7 @@ exports.login = (req, res, next)=>{
             stat: 200,
             msg: 'Login successfully!'
         })
-    })
+    })(req, res, next)
 }
 
 exports.logout = (req, res, next)=>{

@@ -2,7 +2,7 @@
  * @Author: Nokey 
  * @Date: 2017-12-31 19:43:53 
  * @Last Modified by: Mr.B
- * @Last Modified time: 2019-07-13 22:27:45
+ * @Last Modified time: 2019-07-15 15:51:12
  */
 'use strict'; 
 
@@ -27,10 +27,17 @@ const compression   = require('compression')
 const cors          = require('cors')
 const passport      = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const multer        = require('multer')
+const upload        = multer({
+    dest: 'uploads/',
+    limits: {
+        files: 5
+    }
+})
 
 // Environments
-app.set('port', process.env.NODE_PORT || 80)
-app.set('env', process.env.NODE_ENV || 'production')
+app.set('port', process.env.NODE_ENV === 'production' ? 80 : 3000)
+app.set('env', process.env.NODE_ENV === 'production' ? 'production' : 'development')
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
@@ -38,13 +45,14 @@ app.set('view engine', 'ejs')
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(express.static(path.join(__dirname, 'public')))
 // app.use(morgan(':remote-addr :referrer :date[iso] :method :url :status :response-time ms - :res[content-length]'))
-app.use(log4js.connectLogger(logger, {
-    level: 'info',
-    format: (req, res, format) => format(`:status :remote-addr :referrer :method :url :response-time ms ${JSON.stringify(req.body)}`)
+app.use(log4js.connectLogger(log, {
+    level: 'auto',
+    format: (req, res, format) => format(`:remote-addr ":method :url HTTP/:http-version" :status :response-time ms ":referrer" ":user-agent"`)
 }))
 app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(upload.none())
 app.use(session({
     secret: 'Garfield cat',
     name: 'G.SID',
@@ -53,7 +61,7 @@ app.use(session({
     rolling: true,  // refresh session on every response
     cookie: {
         path: '/',
-        // httpOnly: true,
+        httpOnly: true,
         maxAge: 3600000,
         secure: false
     },
@@ -80,14 +88,14 @@ if ('development' !== app.get('env')) {
     }
 } else {
     corsOptions = {
-        origin: [/127\.0\.0\.1:8080/, /localhost:8080/]
+        origin: [/127\.0\.0\.1:3000/, /localhost:3000/]
     }
 }
 
 /**
  * Routes
  */
-let page = require('./routes/page'),
+let page = require('./routes/pages'),
     api = require('./routes/api')
 
 app.post('/api/*', cors(corsOptions), api)
@@ -121,7 +129,7 @@ app.use((err, req, res, next) => {
 // HTTP Server
 const server_http = http.createServer(app)
 server_http.listen(app.get('port'), () => {
-    log.info('App Env: ' + app.get('env'))
+    log.info('App Env: ' + app.get('env') + app.get('port'))
     log.info(corsOptions)
     log.info('Express HTTP server listening on port ' + app.get('port'))
 })
@@ -130,10 +138,10 @@ server_http.listen(app.get('port'), () => {
 // const options = {
 //     key: fs.readFileSync('./server.key'),
 //     cert: fs.readFileSync('./server.crt')
-// };
+// }
 // const server_https = https.createServer(options, app);
 // server_https.listen(443, () => {
 //     log.info('Express HTTPS server listening on port 443');
-// });
+// })
 
-module.exports = app
+// module.exports = app

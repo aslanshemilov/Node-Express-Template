@@ -9,7 +9,6 @@
 const express = require('express')
 const router  = express.Router()
 
-
 exports.home = (req, res, next)=>{
     res.status(200).render('home', { title: 'Home' })
 }

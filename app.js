@@ -14,6 +14,7 @@ const app     = express()
 const path    = require('path')
 const fs      = require('fs')
 const log4js  = require('log4js')
+const config  = require('./config')
 
 // Middlewares
 const favicon       = require('serve-favicon')
@@ -29,7 +30,7 @@ const passport      = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const multer        = require('multer')
 const upload        = multer({
-    dest: 'uploads/',
+    dest: config.upload_path,
     limits: {
         files: 5
     }
@@ -42,8 +43,8 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
 // Use Middlewares
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(favicon(path.join(__dirname, 'favicon.ico')))
+app.use(express.static(config.public_path))
 // app.use(morgan(':remote-addr :referrer :date[iso] :method :url :status :response-time ms - :res[content-length]'))
 app.use(log4js.connectLogger(log, {
     level: 'auto',

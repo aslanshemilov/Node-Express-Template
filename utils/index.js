@@ -16,7 +16,7 @@ exports.exitDirify = (pathStr)=>{
         fs.mkdirSync(pathStr, {
             recursive: true
         })
-        console.info('Create Log Path: ' + pathStr)
+        console.info('Create folder: ' + pathStr)
     }
     
     return pathStr

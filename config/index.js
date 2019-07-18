@@ -6,16 +6,27 @@
  */
 'use strict'; 
 
-let path = require('path')
-let utils = require('../utils')
-let logErrorPath = path.resolve(__dirname, '../logs/error')
-let logInfoPath = path.resolve(__dirname, '../logs/info')
-
+let path            = require('path')
+let utils           = require('../utils')
+// let logErrorPath = path.resolve(__dirname, '../logs/error')
+// let logInfoPath  = path.resolve(__dirname, '../logs/info')
+let logErrorPath    = process.env.NODE_ENV === 'production' ? '/var/log/log4js/error': path.resolve(__dirname, '../logs/error')
+let logInfoPath     = process.env.NODE_ENV === 'production' ? '/var/log/log4js/info' : path.resolve(__dirname, '../logs/info')
 utils.exitDirify(logErrorPath)
 utils.exitDirify(logInfoPath)
 
+let uploadPath      = process.env.NODE_ENV === 'production' ? '/var/uploads'         : path.resolve(__dirname, '../uploads')
+utils.exitDirify(uploadPath)
+
+let publicPath      = process.env.NODE_ENV === 'production' ? '/home/public'         : path.resolve(__dirname, '../public')
+utils.exitDirify(publicPath)
+
 let config = {
     debug: true,
+
+    upload_path: uploadPath,
+
+    public_path: publicPath,
 
     // MongoDB
     // db_myapp: 'mongodb://test:test@localhost:27017/test',

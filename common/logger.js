@@ -41,7 +41,8 @@ log4js.configure({
         infoLog: { appenders: ['infoLog'], level: config.debug ? 'debug' : 'info' },
         default: { appenders: ['infoLog', 'errLog'], level: 'trace' }
     },
-    pm2: true
+    pm2: true,
+    disableClustering: true
 })
 
 // console.log(log4js)

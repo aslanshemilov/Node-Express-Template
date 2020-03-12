@@ -8,7 +8,7 @@ module.exports = {
         merge_logs: true,
         interpreter_args: "--harmony",
         watch: true,
-        ignore_watch: ["node_modules", "public", "\.git", "log", "npm-debug\.log"],
+        ignore_watch: ["node_modules", "public", "\.git", "logs", "uploads", "npm-debug\.log"],
         instances: "1", // String type
         exec_mode: "cluster",
         log_date_format: "YYYY-MM-DD HH:mm Z",

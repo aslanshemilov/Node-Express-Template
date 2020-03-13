@@ -11,6 +11,6 @@ const router  = express.Router()
 
 /* GET home page. */
 const home = require('./home')
-router.get('/home', home.home)
+router.get(/^\/(home)?/, home.home)
 
 module.exports = router

@@ -44,14 +44,14 @@ module.exports = {
           // path in the server
           path: "/var/www/my-repository",
           // Pre-setup command or path to a script on your local machine
-          'pre-setup': "apt-get install git ; ls -la",
+          'pre-setup': "",
           // Post-setup commands or path to a script on the host machine
           // eg: placing configurations in the shared dir etc
           'post-setup': "ls -la",
           // pre-deploy action
           'pre-deploy-local': "echo 'This is a local executed command'",
           // post-deploy action
-          'post-deploy': "npm install",
+          'post-deploy': "rm -rf /srv/www/* && cp -r /var/www/source/* /srv/www && cd /srv/www && npm install && npm run pm2_prod",
         }
     }
 }

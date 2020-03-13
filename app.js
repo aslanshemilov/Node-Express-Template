@@ -96,11 +96,11 @@ if ('development' !== app.get('env')) {
 /**
  * Routes
  */
-let page = require('./routes/pages'),
+let pages = require('./routes/pages'),
     api = require('./routes/api')
 
 app.post('/api/*', cors(corsOptions), api)
-app.get('/*', page)
+app.get('/*', pages)
 
 /**
  * catch 404 and forward to error handler

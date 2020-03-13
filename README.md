@@ -15,6 +15,31 @@
 ```bash
 npm start
 npm test
+
+# 安装mongodb
+sudo touch /etc/yum.repos.d/mongodb-org-4.2.repo
+    [mongodb-org-4.2]
+    name=MongoDB Repository
+    baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.2/x86_64/
+    gpgcheck=1
+    enabled=1
+    gpgkey=https://www.mongodb.org/static/pgp/server-4.2.asc
+    
+sudo yum install -y mongodb-org
+# 启动mongodb
+sudo systemctl start mongod
+# 查看mongodb状态
+sudo systemctl status mongod
+# 开机启动mongodb
+sudo systemctl enable mongod
+# 停止mongodb
+sudo systemctl stop mongod || sudo mongod -f /etc/mongo-m.conf  --shutdown
+
+# 安装最新版Redis
+yum install -y http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+yum --enablerepo=remi install redis
+# 查看包路径
+sudo rpm -ql redis
 ```
 
 ### 压测（Mac）：

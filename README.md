@@ -27,7 +27,7 @@ sudo touch /etc/yum.repos.d/mongodb-org-4.2.repo
     
 sudo yum install -y mongodb-org
 # 启动mongodb
-sudo systemctl start mongod
+sudo systemctl start mongod || sudo mongod -f /etc/mongod.conf
 # 查看mongodb状态
 sudo systemctl status mongod
 # 开机启动mongodb
@@ -40,6 +40,8 @@ yum install -y http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 yum --enablerepo=remi install redis
 # 查看包路径
 sudo rpm -ql redis
+# 启动 Redis
+sudo redis-server /etc/redis.conf
 ```
 
 ### 压测（Mac）：

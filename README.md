@@ -49,6 +49,13 @@ sudo rpm -ivh test.rpm
 
 ```
 
+### 使用yum安装nodejs
+```
+curl -sL https://rpm.nodesource.com/setup_12.x | sudo bash -
+
+sudo yum install nodejs
+```
+
 ### let's encrypt your site
 [certbot](https://certbot.eff.org/lets-encrypt/centosrhel7-other)
 

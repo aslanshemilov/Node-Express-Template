@@ -47,9 +47,10 @@ sudo redis-server /etc/redis.conf
 wget https://url/test.rpm
 sudo rpm -ivh test.rpm
 
-# let's encrypt
-[certbot](https://certbot.eff.org/lets-encrypt/centosrhel7-other)
 ```
+
+### let's encrypt your site
+[certbot](https://certbot.eff.org/lets-encrypt/centosrhel7-other)
 
 ### 压测（Mac）：
 ```bash

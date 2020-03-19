@@ -46,6 +46,9 @@ sudo redis-server /etc/redis.conf
 # 手动安装rpm
 wget https://url/test.rpm
 sudo rpm -ivh test.rpm
+
+# let's encrypt
+[certbot](https://certbot.eff.org/lets-encrypt/centosrhel7-other)
 ```
 
 ### 压测（Mac）：

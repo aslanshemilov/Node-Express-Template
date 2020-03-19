@@ -33,7 +33,7 @@ sudo systemctl status mongod
 # 开机启动mongodb
 sudo systemctl enable mongod
 # 停止mongodb
-sudo systemctl stop mongod || sudo mongod -f /etc/mongo-m.conf  --shutdown
+sudo systemctl stop mongod || sudo mongod -f /etc/mongod.conf  --shutdown
 
 # 安装最新版Redis
 yum install -y http://rpms.famillecollet.com/enterprise/remi-release-7.rpm

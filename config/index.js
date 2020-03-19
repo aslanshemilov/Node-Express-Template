@@ -40,7 +40,11 @@ let config = {
 
     // log4js
     logErrorFile: logErrorPath + '/err.log',
-    logInfoFile: logInfoPath + '/info.log'
+    logInfoFile: logInfoPath + '/info.log',
+
+    cors: {
+        white_list: [/\.domain1\.com$/, /\.domain2\.me$/]
+    }
 }
 
 module.exports = config

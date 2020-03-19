@@ -85,7 +85,7 @@ passport.deserializeUser(Users.deserializeUser())
 let corsOptions = null
 if ('development' !== app.get('env')) {
     corsOptions = {
-        origin: [/\.domain1\.com$/, /\.domain2\.me$/]
+        origin: config.cors.white_list
     }
 } else {
     corsOptions = {

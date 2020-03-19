@@ -7,7 +7,7 @@ module.exports = {
         out_file: "./logs/pm2/out.log",
         merge_logs: true,
         interpreter_args: "--harmony",
-        watch: true,
+        watch: false,
         ignore_watch: ["node_modules", "public", "\.git", "logs", "uploads", "npm-debug\.log"],
         instances: "1", // String type
         exec_mode: "cluster",

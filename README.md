@@ -42,6 +42,10 @@ yum --enablerepo=remi install redis
 sudo rpm -ql redis
 # 启动 Redis
 sudo redis-server /etc/redis.conf
+
+# 手动安装rpm
+wget https://url/test.rpm
+sudo rpm -ivh test.rpm
 ```
 
 ### 压测（Mac）：

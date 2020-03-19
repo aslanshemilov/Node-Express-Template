@@ -17,8 +17,13 @@ npm-debug.log
 *.rdb
 
 #忽略 .vscode
-/.vscode
+.vscode/
 
 #忽略public文件夹，公共文件用filezilla上传
 public/
 logs/
+
+build/
+.idea/
+npm-debug.log.*
+package-lock.json
